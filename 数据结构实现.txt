@@ -1,0 +1,686 @@
+1.队列
+class MyQueue {
+    private:
+        // store elements
+        vector<int> data;       
+        // a pointer to indicate the start position
+        int p_start;            
+    public:
+        MyQueue() {p_start = 0;}
+        /** Insert an element into the queue. Return true if the operation is successful. */
+        bool enQueue(int x) {
+            data.push_back(x);
+            return true;
+        }
+        /** Delete an element from the queue. Return true if the operation is successful. */
+        bool deQueue() {
+            if (isEmpty()) {
+                return false;
+            }
+            p_start++;
+            return true;
+        };
+        /** Get the front item from the queue. */
+        int Front() {
+            return data[p_start];
+        };
+        /** Checks whether the queue is empty or not. */
+        bool isEmpty()  {
+            return p_start >= data.size();
+        }
+};
+
+
+2.哈希表
+
+#有两种不同类型的哈希表：哈希集合和哈希映射。
+	1.哈希集合是集合数据结构的实现之一，用于存储非重复值。
+	2.哈希映射是映射 数据结构的实现之一，用于存储(key, value)键值对。
+
+
+哈希表的原理
+哈希表的关键思想是使用哈希函数将键映射到存储桶。更确切地说，
+	当我们插入一个新的键时，哈希函数将决定该键应该分配到哪个桶中，并将该键存储在相应的桶中；
+	当我们想要搜索一个键时，哈希表将使用相同的哈希函数来查找对应的桶，并只在特定的桶中进行搜索。
+
+
+哈希函数是哈希表中最重要的组件，该哈希表用于将键映射到特定的桶。
+在上一篇文章中的示例中
+我们使用 y = x % 5 作为散列函数，其中 x 是键值，y 是分配的桶的索引。
+散列函数将取决于键值的范围和桶的数量。
+理想情况下，完美的哈希函数将是键和桶之间的一对一映射
+
+冲突解决算法应该解决以下几个问题：
+1 如何组织在同一个桶中的值？
+2 如果为同一个桶分配了太多的值，该怎么办？
+3 如何在特定的桶中搜索目标值？
+
+
+
+1.设计哈希集合
+#my solution 162ms
+class MyHashSet {
+public:
+    /** Initialize your data structure here. */
+    long *data;
+    MyHashSet() {
+        data=new long[100000];
+        for(long i=0;i<100000;i++)
+            data[i]=0;
+    }
+    
+    void add(int key) {
+        data[key]++;
+    }
+    
+    void remove(int key) {
+        data[key]=0;
+    }
+    
+    /** Returns true if this set contains the specified element */
+    bool contains(int key) {
+        if(data[key]!=0)
+            return true;
+        return false;
+    }
+};
+
+/**
+ * Your MyHashSet object will be instantiated and called as such:
+ * MyHashSet obj = new MyHashSet();
+ * obj.add(key);
+ * obj.remove(key);
+ * bool param_3 = obj.contains(key);
+ */
+
+#28ms大佬
+static const int _ = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    return 0;
+}();
+
+class MyHashSet {
+private:
+    vector<bool> hashSet;
+public:
+    MyHashSet() {
+        hashSet = vector<bool>(1000001, false);
+    }
+
+    void add(int key) {
+        hashSet[key]=true;
+    }
+
+    void remove(int key) {
+        hashSet[key]=false;
+    }
+
+    /** Returns true if this set contains the specified element */
+    bool contains(int key) {
+        return hashSet[key];
+    }
+};
+
+
+
+2.设计哈希映射
+#my solution 440ms
+class MyHashMap {
+    private:
+        long *data;
+public:
+    /** Initialize your data structure here. */
+    MyHashMap() {
+        data=new long[1000001];
+        for(long i=0;i<1000000;i++)
+            data[i]=-1;
+    }
+    
+    /** value will always be non-negative. */
+    void put(int key, int value) {
+        data[key]=value;
+    }
+    
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    int get(int key) {
+        if(data[key]!=-1)
+            return data[key];
+        return -1;
+    }
+    
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    void remove(int key) {
+        data[key]=-1;
+    }
+    ~MyHashMap()
+    {
+        delete []data;
+    }
+};
+
+
+#65ms
+class MyHashMap {
+public:
+    /** Initialize your data structure here. */
+    int map_key[1000001]={0};
+    int map_value[1000001]={0};
+    MyHashMap() {}
+    /** value will always be non-negative. */
+    void put(int key, int value) {
+        map_key[key]=1;
+        map_value[key]=value;
+    }
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    int get(int key) {
+        if(map_key[key]!=1)
+            return -1;
+        return map_value[key];
+        
+    }
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    void remove(int key) {
+        map_key[key]=0;
+        map_value[key]=0;
+    }
+};
+
+
+内置哈希表的典型设计是：
+
+ 键值可以是任何可哈希化的类型。并且属于可哈希类型的值将具有哈希码。
+ 此哈希码将用于映射函数以获取存储区索引。
+ 每个桶包含一个数组，用于在初始时将所有值存储在同一个桶中。
+ 如果在同一个桶中有太多的值，这些值将被保留在一个高度平衡的二叉树搜索树中。
+插入和搜索的平均时间复杂度仍为 O(1)。最坏情况下插入和搜索的时间复杂度是 O(logN)，
+使用高度平衡的 BST。这是在插入和搜索之间的一种权衡。
+
+
+#C++ hashSet
+
+#include <unordered_set>                // 0. include the library
+
+int main() {
+    // 1. initialize a hash set
+    unordered_set<int> hashset;   
+    // 2. insert a new key
+    hashset.insert(3);
+    hashset.insert(2);
+    hashset.insert(1);
+    // 3. delete a key
+    hashset.erase(2);
+    // 4. check if the key is in the hash set
+    if (hashset.count(2) <= 0) {
+        cout << "Key 2 is not in the hash set." << endl;
+    }
+    // 5. get the size of the hash set
+    cout << "The size of hash set is: " << hashset.size() << endl; 
+    // 6. iterate the hash set
+    for (auto it = hashset.begin(); it != hashset.end(); ++it) {
+        cout << (*it) << " ";
+    }
+    cout << "are in the hash set." << endl;
+    // 7. clear the hash set
+    hashset.clear();
+    // 8. check if the hash set is empty
+    if (hashset.empty()) {
+        cout << "hash set is empty now!" << endl;
+    }
+}
+
+ * Template for using hash set to find duplicates.
+ */
+bool findDuplicates(vector<Type>& keys) {
+    // Replace Type with actual type of your key
+    unordered_set<Type> hashset;
+    for (Type key : keys) {
+        if (hashset.count(key) > 0) {
+            return true;
+        }
+        hashset.insert(key);
+    }
+    return false;
+}
+
+
+include<set>
+set.insert();
+set.count();
+
+
+1.两个数组的交集
+#me 20ms
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) 
+    {
+        vector<int> s;
+        sort(nums1.begin(),nums1.end());
+        sort(nums2.begin(),nums2.end());
+        int i=0,j=0;
+        int n=nums1.size();
+        int m=nums2.size();
+        while(i<n && j<m)
+        {
+            if(nums1[i]==nums2[j])
+            {
+                s.push_back(nums1[i]);
+                i++;
+                j++;
+            }
+            else if(nums1[i]>nums2[j])
+                j++;
+            else
+                i++;
+        }
+        s.erase(unique(s.begin(),s.end()),s.end());
+        return s;
+    }
+};
+
+执行用时为 4 ms 的范例
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> res;
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+        
+        int index1 = 0, index2 = 0;
+        
+        while(index1 < nums1.size() && index2 < nums2.size())
+        {
+            if(nums1[index1] == nums2[index2])
+            {
+                if(find(res.begin(), res.end(), nums1[index1]) == res.end())
+                    res.push_back(nums1[index1]);
+                index1++;
+                index2++;
+            }else if(nums1[index1] > nums2[index2])
+                index2++;
+            else
+                index1++;
+        }
+        
+        return res;
+    }
+};
+
+2.快乐数
+#8ms
+class Solution {
+public:
+    bool isHappy(int n) 
+    {
+        unordered_set<int> hash;
+        while(n!=1)
+        {
+            n=num(n);
+            if(hash.count(n))
+                return false;
+            hash.insert(n);
+        }
+        return true;
+    }
+    int num(int n)
+    {
+        int nums=0;
+        while(n)
+        {
+            nums+=pow(n%10,2);
+            n/=10;
+        }
+        return nums;
+    }
+};
+
+
+#4ms
+class Solution {
+public:
+int turn(int n)
+{
+    int sum = 0;
+    while (true)
+    {
+        sum += (n % 10) * (n % 10);
+        n /= 10;
+        if (n == 0)
+            return sum;
+    }
+}
+bool isHappy(int n)
+{
+    set<int> s;
+    while (true)
+    {
+        n = turn(n);
+        if (s.count(n) > 0)
+            return false;
+        if (n == 1)
+            return true;
+        s.insert(n);
+    }
+}
+
+
+#哈希映射
+
+#include <unordered_map>                // 0. include the library
+
+int main() {
+    // 1. initialize a hash map
+    unordered_map<int, int> hashmap;
+    // 2. insert a new (key, value) pair
+    hashmap.insert(make_pair(0, 0));
+    hashmap.insert(make_pair(2, 3));
+    // 3. insert a new (key, value) pair or update the value of existed key
+    hashmap[1] = 1;
+    hashmap[1] = 2;
+    // 4. get the value of a specific key
+    cout << "The value of key 1 is: " << hashmap[1] << endl;
+    // 5. delete a key
+    hashmap.erase(2);
+    // 6. check if a key is in the hash map
+    if (hashmap.count(2) <= 0) {
+        cout << "Key 2 is not in the hash map." << endl;
+    }
+    // 7. get the size of the hash map
+    cout << "the size of hash map is: " << hashmap.size() << endl; 
+    // 8. iterate the hash map
+    for (auto it = hashmap.begin(); it != hashmap.end(); ++it) {
+        cout << "(" << it->first << "," << it->second << ") ";
+    }
+    cout << "are in the hash map." << endl;
+    // 9. clear the hash map
+    hashmap.clear();
+    // 10. check if the hash map is empty
+    if (hashmap.empty()) {
+        cout << "hash map is empty now!" << endl;
+    }
+}
+
+
+
+
+3.同构字符串
+#12ms
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) 
+    {
+        if(s.size()!=t.size())
+            return false;
+        vector<int> q(256,-1); //赋值256字符，-1
+        vector<int> p(256,-1);
+        for(int i=0;i<s.size();i++)
+        {
+            if(q[s[i]]!=p[t[i]])//位置不同
+                return false;
+            q[s[i]]=i;//标位置
+            p[t[i]]=i;
+        }
+        return true;
+    }
+};
+
+#8ms
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        int m1[256] = {0}, m2[256] = {0}, n = s.size();
+        for (int i = 0; i < n; ++i) {
+            if (m1[s[i]] != m2[t[i]]) 
+                return false;
+            m1[s[i]] = i + 1;
+            m2[t[i]] = i + 1;            
+        }
+        return true;
+    }
+};
+
+
+
+
+4.两个列表的最小索引总和
+#264ms
+class Solution {
+public:
+    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) 
+    {
+        vector<string> s;
+        map<string,int> p;
+        for(int i=0;i<list1.size();i++)
+            p.insert(pair<string,int>(list1[i],i) );
+        int m=INT_MAX;
+        for(int i=0;i<list2.size();i++)
+        {
+            if(p.find(list2[i])!=p.end())
+            {
+                if(i+p[list2[i]]<m)
+                {
+                    m=i+p[list2[i]];
+                    s.clear();
+                    s.push_back(list2[i]);
+                }
+                 else if(p[list2[i]]+i==m)
+                    s.push_back(list2[i]);
+            }
+        }
+        return s;
+    }
+};
+
+
+#52ms
+static const auto io_sync_off = []()
+{
+    // turn off sync
+    std::ios::sync_with_stdio(false);
+    // untie in/out streams
+    std::cin.tie(nullptr);
+    return nullptr;
+}();
+class Solution {
+public:
+    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
+        
+        int min=20000;
+        vector<string> ans;
+        unordered_map<string,int> m;
+        unordered_map<string,int> hashmap;
+        
+        for(int i=0;i<list1.size();i++)
+            hashmap[list1[i]]=i+1;
+        for(int i=0;i<list2.size();i++)
+            if(hashmap[list2[i]])
+            {
+                int sum=hashmap[list2[i]]+i-1;
+                if(sum<min)
+                    min=sum;
+                m[list2[i]]=sum;
+            }
+        
+        for(auto p: m)
+        {
+            if(p.second==min)
+                ans.push_back(p.first);
+        }
+        
+        return ans;
+    }
+};
+
+
+5.存在重复元素2
+#68ms
+
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) 
+    {
+        if(nums.size()<=1)
+            return false;
+        int i;
+        set<int> s;
+        for(i=0;i<nums.size();i++)
+        {
+            if(s.find(nums[i])!=s.end())
+                return true;
+            s.insert(nums[i]);
+            if(s.size()==k+1)
+                s.erase(nums[i-k]);
+        }
+        return false;
+    }
+};
+
+
+#4ms
+static const auto _ = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    return nullptr;
+} ();
+
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        if (k > 34999)
+            return false;
+        unordered_map<int, int> isDouble2;
+        auto size = nums.size();
+        for (int i = 0; i < size; ++i) {
+            if (isDouble2.find(nums[i]) != isDouble2.end() && k >= i - isDouble2[nums[i]])
+                return true;
+            else
+                isDouble2[nums[i]] = i;
+        }
+        return false;
+    }
+};
+
+
+
+
+
+6.字母异位词分组
+#108ms
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) 
+    {
+        vector<vector<string>> s;
+        map<string,int> p;
+        vector<string> q;
+        int index=0;
+        for(int i=0;i<strs.size() ;i++)
+        {
+            string str=strs[i];
+            sort(str.begin(),str.end());
+            if(p.find(str)==p.end())
+            {
+                p[str]=index;
+                index++;
+                s.push_back(q);
+            }
+            s[p[str]].push_back(strs[i]);
+        }
+        return s;
+    }
+};
+
+
+#20ms
+static const auto __ = []() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+  return nullptr;
+}();
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        if(strs.size()==0)  return {};
+        vector<vector<string>> res;
+        unordered_map<string,vector<string>> map;
+        string tmp;
+        for(string &s: strs)
+        {
+            tmp = s;
+            sort(tmp.begin(),tmp.end());
+            map[tmp].push_back(s);
+        }
+        for(const auto &p: map){
+            res.push_back(p.second);
+        }
+        return res;
+
+    }
+};
+
+7.路径总和  (自底向上树的递归)
+#36ms
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) 
+    {
+        if(root==NULL)
+            return false;
+        int count=sum-root->val;
+        if(!root->left && !root->right)
+            return count==0?true:false;
+        
+        return  hasPathSum(root->left,count) || hasPathSum(root->right,count);
+    }
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

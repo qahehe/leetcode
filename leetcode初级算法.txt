@@ -1,0 +1,1117 @@
+#数学题
+1.3的幂
+给定一个整数，写一个函数来判断它是否是 3 的幂次方。
+class Solution
+{
+public:
+	bool isPowerOfThree(int n) 
+	{
+		while (n && n%3==0) 
+		{
+			n /= 3;
+		}
+		return n == 1;
+	}
+};
+
+
+2.质数计数
+class Solution {
+public:
+    int countPrimes(int n)
+    {
+        int count=0,i,j;
+        bool *s=new bool[n+1];
+        for(i=0;i<n;i++)
+            s[i]=false;
+        for(i=2;i<sqrt(n);i++)
+        {
+            if(!s[i])
+            {
+                 for(j=i*i;j<n;j+=i)
+                        s[j] = true;
+            }
+        }
+        for(int j=2;j<n;j++)
+        {
+                if(!s[j])
+                    count++;
+        }
+            return count;
+    }
+};
+
+
+
+
+3.fizzbuzz
+#int 转string #标准库函数
+to_string(i)
+class Solution {
+public:
+    vector<string> fizzBuzz(int n) {
+        vector<string> s;
+        for(int i=1;i<=n;i++)
+        {
+            if(i%3==0 && i%5!=0)
+            {
+                s.push_back("Fizz");
+            }
+            else if(i%5==0 && i%3!=0)
+            {
+                s.push_back("Buzz");
+            }
+            else if(i%5==0 && i%3==0)
+            {
+                s.push_back("FizzBuzz");
+            }
+            else
+                s.push_back(to_string(i));
+        }
+        return s;
+    }
+};
+
+4.罗马数字
+执行用时为 20 ms 的范例
+static const auto io_sync_off=[](){
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    return 0;
+}();
+class Solution {
+public:
+
+    int romanToInt(string s) {        
+        int sum = 0;
+        int n[s.size()+1];
+        n[s.size()]=0;
+        for(int i = 0; i < s.length(); i++){           
+            switch(s[i]){
+                case 'I':  n[i]=1; break;
+                case 'V':  n[i]=5; break;
+                case 'X':  n[i]=10; break;
+                case 'L':  n[i]=50; break;
+                case 'C':  n[i]=100; break;
+                case 'D':  n[i]=500; break;
+                case 'M':  n[i]=1000; break;
+                default :break;             
+            }
+        }
+        //可以用int n[100]; n['I']=1;....表示
+        
+        for(int i = 0; i < s.length(); i++){
+            if(n[i] < n[i+1]) {
+                sum = sum + n[i+1] - n[i];
+                i++;
+            }else
+                sum += n[i];
+        }
+       
+        return sum;
+    } 
+};
+
+#辣鸡解法
+class Solution {
+public:
+    int romanToInt(string s) 
+    {
+        int res = 0;
+        unordered_map<char, int> m{{'I', 1}, {'V', 5}, {'X', 10}, {'L', 50}, {'C', 100}, {'D', 500}, {'M', 1000}};
+        for (int i = 0; i < s.size(); ++i) {
+            int val = m[s[i]];
+            if (i == s.size() - 1 || m[s[i+1]] <= m[s[i]]) res += val;
+            else res -= val;
+        }
+        return res;
+    }
+};
+
+#数组
+
+
+5.搜索插入位置
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int i,j,t;
+        if(target<=nums[0])
+            return 0;
+        for(i=0;i<nums.size()-1;i++)
+        {
+            if(target<nums[i+1] && target>nums[i])
+            {
+                t=i+1;
+                break;
+            }
+            if(target==nums[i])
+                return i;
+        }
+        if(target==nums[i])
+            return i;
+        else
+            return i+1;
+        if(i==nums.size())
+            return i;
+        return t;
+    }
+};
+
+
+6.各位相加（余九法）
+class Solution {
+public:
+    int addDigits(int num) {
+        int i,j;
+        int sum =(num/10)+(num%10);
+        while(sum >= 10) 
+            sum= addDigits(sum);
+        return num==0?0:sum;
+    }
+};
+
+#数学一行
+ int addDigits(int num) {
+        return ((num-1) % 9)+1 ;
+        }
+		
+7.加一
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) 
+    {
+        int t=digits.size()-1;
+        digits[t]+=1;
+        while (t>=0)
+        {
+            if (digits[t]>=10)
+            {
+                if (t-1>=0) 
+                {
+                    digits[t]=0;
+                    digits[t-1]+=1;
+                } 
+                else 
+                {
+                    digits[t]=0;
+                    digits.insert(digits.begin(),1);
+                }
+            }
+            t--;
+        }
+        return digits;	   
+    }
+};
+
+8.移动0
+#高效的解法
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int k = 0;  //数组中索引为[0，k）的均为非零元素
+        for(int i = 0; i < nums.size(); i++){
+            if(nums[i]  != 0){
+                if(k != i)
+                    swap(nums[i],nums[k]);
+                k++;
+            }
+        }
+    }
+};
+
+
+#我的解法（冒泡）
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) 
+    {
+        int i,j;
+        for(i=0;i<nums.size();i++)
+        {
+            for(j=i+1;j<nums.size();j++)
+            {
+                if(nums[i]==0)
+                {
+                    int temp=nums[i];
+                    nums[i]=nums[j];
+                    nums[j]=temp;
+                }
+            }
+        }
+    }
+};
+
+9.两数之和
+#8ms大佬
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        std::unordered_map<int,int> hash;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            auto iter = hash.find(target - nums[i]);
+
+            if (iter != hash.end()) {
+                return vector{iter->second, i};
+            };
+            hash[nums[i]] = i;
+        }
+        return vector<int>();
+    }
+};
+#我的菜鸡
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target)
+    {
+        int i,j;
+        vector<int> s;
+        for(i=0;i<nums.size()-1;i++)
+        {
+            for(j=i+1;j<nums.size();j++)
+                if((nums[i]+nums[j])==target && j!=i)
+                {
+                    s.push_back(i);
+                    s.push_back(j);
+                    return s;
+                }
+        }
+        return s;
+    }
+};
+
+10.旋转图像（矩阵旋转90°）
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) 
+    {
+        int i,j;
+        int t=matrix.size();
+        for(i=0;i<t/2;i++)
+            swap(matrix[i],matrix[t-i-1]);
+        for(i=0;i<t;i++)
+        {
+            for(j=i+1;j<t;j++)
+               swap(matrix[i][j],matrix[j][i]);
+        }
+    }
+};
+
+执行用时为 4 ms 的范例
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        /* 首先swap( a[i][j] 与 a[j][i])
+        [ 5, 1, 9,11],      [ 5, 2, 13,15],      [ 5, 2, 13,15],
+        [ 2, 4, 8,10], ➡️    [ 1, 4, 8, 10],   ➡️  [ 1, 4, 3, 14],
+        [13, 3, 6, 7], ➡️    [ 9, 3, 6,  7],   ➡️  [ 9, 8, 6, 12],
+        [15,14,12,16]       [ 11,14,12,16]       [ 11,10,7, 16]
+        
+        //其次列与列之间交换
+        [ 5, 2, 13,15],     [ 15,13, 2, 5],
+        [ 1, 4, 3, 14], ➡️   [ 14, 3, 4, 1],
+        [ 9, 8, 6, 12], ➡️   [ 12, 6, 8, 9],
+        [ 11,10,7, 16]      [ 16, 7,10,11]
+        
+        */
+        
+        for( int i = 0; i < matrix.size(); i++)
+            for( int j = 0; j < i; j++)
+                swap( matrix[i][j], matrix[j][i]);
+        
+                
+        for( int i = 0, j = matrix.size() - 1; i < j; i++, j--)
+            for( int k = 0; k < matrix.size() ; k++)
+                swap( matrix[k][i], matrix[k][j]);
+    }
+};
+
+
+
+11.有效的数独
+#12ms大佬的解法
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        for(int i=0;i<9;i++)
+            for(int j=0;j<9;j++)
+            {
+                if(board[i][j]=='.')
+                    continue;
+                for(int k=j+1;k<9;k++)
+                    if(board[i][j]==board[i][k])
+                        return false;
+                for(int k=i+1;k<9;k++)
+                    if(board[i][j]==board[k][j])
+                        return false;
+                for(int a=i+1;a<(i/3+1)*3;a++)
+                {
+                    for(int b=j/3*3;b<j;b++)
+                        if(board[i][j]==board[a][b])
+                            return false;
+                    for(int b=j+1;b<j/3*3+3;b++)
+                        if(board[i][j]==board[a][b])
+                            return false;
+                }
+            }
+        return true;
+    }
+};
+
+#me 解
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) 
+    {
+        bool raw[9][9];
+        bool col[9][9];
+        bool cell[9][9];
+        for(int i=0;i<9;i++)
+        {
+            for(int j=0;j<9;j++)
+            {
+                raw[i][j]=false;
+                col[i][j]=false;
+                cell[i][j]=false;
+            }
+        }
+        for(int i=0;i<9;i++)
+        {
+            for(int j=0;j<9;j++)
+            {
+                if(board[i][j]>='1' && board[i][j]<='9')
+                {
+                    int c=board[i][j]-'1';
+                    if(raw[i][c] || col[c][j] || cell[3*(i/3)+j/3][c] )
+                        return false;
+                    raw[i][c]=true;
+                    col[c][j]=true;
+                    cell[3*(i/3)+j/3][c]=true;
+                }
+            }
+        }
+        return true;
+    }
+};
+
+
+12.存在重复元素
+#28ms大佬的解法
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int len=nums.size();
+        for(int i=0;i<len-1;i++){
+            if(nums[i]==nums[i+1]) return 1;
+        }
+        return 0;
+    }
+};
+#我的菜鸡
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums)
+    {
+        for(int i=0;i<nums.size();i++)
+        {
+            for(int j=i+1;j<nums.size();j++)
+            {
+                if(nums[i]==nums[j])
+                    return true;
+            }
+        }
+        return false;
+    }
+};
+
+
+13.只出现过一次的数字
+#my solutions
+class Solution {
+public:
+    int singleNumber(vector<int>& nums)
+    {
+        sort(nums.begin(),nums.end());
+        int i;
+        for(i=0;i<nums.size()-1;i++)
+        {
+            if(nums[i]==nums[i+1])
+            {
+                i++;
+                continue;
+            }
+            else
+                return nums[i];
+        }
+        return nums[i];
+    }
+};
+
+#dalao
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        // 先排序
+        qsort(&nums[0], nums.size(), sizeof(int), compare);
+        
+        // 再搜索
+        for (int i = 0; i < nums.size(); i+=2) {
+              if (i == nums.size()-1 || nums[i] != nums[i+1]) 
+                  return nums[i];
+        }
+        
+        return -99;
+    }
+    
+    static int compare(const void * a, const void * b) {
+        return *(int*)a - *(int*)b;
+    }
+};
+
+14.旋转数组
+ #my end
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) 
+    {
+        int nSize = nums.size();
+        k = k >= nSize ? k - nSize : k;
+        for(;k>0;k--)
+        {
+            int s=nums[nSize-1];
+            nums.erase(nums.end()-1);
+            nums.insert(nums.begin(),s);
+        }
+    }
+};
+#dalao
+class Solution {
+public:
+    /*
+    void rotate(vector<int>& nums, int k) {
+        int n = nums.size();
+        k = n - k % n;
+        if (k == 0 || k == n) return;
+        
+        std::vector<int> vTemp = std::vector<int>(nums.begin(), nums.begin() + k + 1);
+        for (int i = 0; i < n - k; i++)
+        {
+            nums[i] = nums[i + k];
+        }
+        for (int i = 0; i < k; i++)
+        {
+            nums[n - k + i] = vTemp[i];
+        }
+    }
+    //*/
+    void rotate(vector<int>& nums, int k) {
+        int n = nums.size();
+        k = k % n;
+        if (k == 0 || k == n) return;
+        
+        std::reverse(nums.begin(), nums.end());
+        std::reverse(nums.begin(), nums.begin() + k);
+        std::reverse(nums.begin() + k, nums.end());
+    }
+};
+
+
+15.两个数组的交集2
+#12ms
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2)
+    {
+        sort(nums1.begin(),nums1.end());
+        sort(nums2.begin(),nums2.end());
+        vector<int> s;
+        int l = 0;
+        int r = 0;
+        while(l < nums1.size() && r < nums2.size())
+        {
+            if(nums1[l] == nums2[r])
+            {
+                s.push_back(nums1[l]);
+                ++l;
+                ++r;
+            }
+            else if(nums1[l] > nums2[r])
+                ++r;
+            else
+                ++l;
+        }
+        return s;
+    }
+};
+
+
+16.删除排序数组的重复项
+#56ms
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums)
+    {
+        nums.erase(unique(nums.begin(),nums.end()),nums.end());
+        return nums.size();
+    }
+};
+
+#20ms
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        auto i = 0;
+        auto j = 0;
+        while(j < nums.size()){
+            if(nums[i] == nums[j])
+                j++;
+            else
+                nums[++i] = nums[j];
+        }
+        return i+1;
+    }
+};
+
+
+17.买卖股票的最佳时机 II
+#12ms我的
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) 
+    {
+        int i,j;
+        int count=0;
+        int size=prices.size();
+        for(i=0;i<size-1;i++)
+        {
+            if(prices[i]<prices[i+1])
+                count+=prices[i+1]-prices[i];
+        }
+        return count;
+    }
+};
+
+#4ms大佬
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.size()<2)return 0;
+        int hold=-prices[0], unhold=0;
+        for(int i=1;i<prices.size();++i){
+            int tmp=hold;
+            hold=max(hold, unhold-prices[i]);
+            unhold=max(unhold, tmp+prices[i]);
+        }
+        return unhold;
+    }
+};
+
+
+
+#字符串处理
+
+18.反转字符串
+容器反转,要求空间复杂度O(1)
+#my solutions
+class Solution {
+public:
+    void reverseString(vector<char>& s) 
+    {
+        std::reverse(s.begin(),s.end());
+    }
+};
+#8ms解读
+class Solution {    
+public:
+    string reverseString(string s) {
+        int m=0;
+        int j=s.length()-1;
+         for (int i =0; i <s.length()/2; i++)  {
+             m=s[i];
+             s[i]=s[j];
+             s[j]=m;
+             j--;
+             } 
+        return s;
+    }
+};
+
+19.整数反转
+#取余的思路，重点是32位的判断，先用long后转回int，用INT_MIN和INT_MAX判断是否溢出
+class Solution {
+public:
+    int reverse(int x) {
+        long sum=0;
+        while(x)
+        {
+            sum=sum*10+x % 10;
+            x /= 10;
+        }
+        if(sum<INT_MIN || sum>INT_MAX)
+        {
+            return 0;
+        }
+        return (int)sum;
+    }
+};
+
+20.字符串中的第一个惟一字符
+#me 64ms
+class Solution {
+public:
+    int firstUniqChar(string s) 
+    {
+        int i,j;
+        if(s.size()==0)
+            return -1;
+        for(i=0;i<s.size();i++)
+        {
+            int key=1;
+            for(j=0;j<s.size();j++)
+            {
+                if(s[i]==s[j] && i!=j)
+                {
+                    key=0;
+                    break;
+                }
+            }
+            if(key!=0)
+            {
+                return i;
+            }
+            
+        }
+        return -1;
+    }
+};
+
+
+#28ms大佬的解法
+class Solution {
+public:
+    int firstUniqChar(string s) {
+      //  int len = s.size();
+        //int i,j;
+        vector<int> temp(26,0);
+        for(auto i : s)
+            temp[i - 'a']++;
+        int i ;
+        for(i = 0; i < s.size();i++){
+            if(temp[s[i] -'a'] != 0){
+                if(temp[s[i] -'a']== 1)
+                    return i;
+                continue;//继续寻找
+            }
+        }
+          return -1;
+        }
+    
+    
+};
+
+21.有效的字母异位词
+#me解28ms
+class Solution {
+public:
+    bool isAnagram(string s, string t) 
+    {
+        if(s.size()!=t.size())
+            return false;
+        int *a=new int[26];
+        int *b=new int[26];
+        for(int i=0;i<26;i++)
+        {
+            a[i]=0;
+            b[i]=0;
+        }
+        for(int i=0;i<s.size();i++)
+        {
+            a[s[i]-'a']++;
+            b[t[i]-'a']++;
+        }
+        for(int j=0;j<26;j++)
+        {
+            if(a[j]!=b[j])
+                return false;
+        }
+        delete []a;
+        delete []b;
+        return true;
+    }
+};
+
+
+#12ms
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if(s.length()!=t.length())
+        {
+            return false;
+        }
+        int sTable[26] = {0};
+        int tTable[26] = {0};
+        for (auto i = 0; i<s.length();i++){
+            sTable[s[i] - 'a'] ++;
+            tTable[t[i] - 'a'] ++;
+        }
+        for (auto i = 0; i<26; i++){
+            if(sTable[i]!=tTable[i]){
+                return false;
+            }
+                
+        }
+        return true;
+    }
+};
+
+22.验证回文串
+#me 16ms
+class Solution {
+public:
+    bool isPalindrome(string s) 
+    {
+        int i,j;
+        if(s=="")
+            return true;
+        vector<char> q;
+        for(i=0;i<s.size();i++)
+        {
+            if((s[i]>='a' && s[i]<='z') ||(s[i]>='A' && s[i]<='Z'))
+                q.push_back(tolower(s[i]));
+            else if((s[i]>='0' && s[i]<='9') )
+                q.push_back(s[i]);
+            else 
+                continue;
+        }
+        for(i=0,j=q.size()-1;i<q.size()/2;i++,j--)
+        {
+            if(q[i]!=q[j])
+                return false;
+        }
+        return true;
+    }
+};
+#dalao 8ms大佬
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        string str="";
+        int len=s.length();
+        int lenStr=0;
+        for(int i=0;i<len;i++){
+            if((s[i]>='a'&&s[i]<='z')||(s[i]>='0'&&s[i]<='9')){
+                str+=s[i];
+                lenStr++;
+            }
+            else if(s[i]>='A'&&s[i]<='Z'){
+                str+=(s[i]-'A'+'a');
+                lenStr++;
+            }
+        }
+        for(int i=0;i<lenStr/2;i++){
+            if(str[i]!=str[lenStr-i-1]){
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+
+23.字符串转换整数
+#28ms me
+class Solution {
+public:
+    int myAtoi(string str) 
+    {
+        if(str.size()==0)
+            return 0;
+        int i,flag=1;
+        long sum=0;
+        for(i=0;i<str.size();i++)
+        {
+            if(str[i]==' ')
+                continue;
+            else if(str[i]>='0' && str[i]<='9')
+            {
+                sum=sum*10+str[i]-'0';
+                if(sum>INT_MAX)
+                {
+                    if(flag)
+                        return INT_MAX;
+                    else
+                        return INT_MIN;
+                }
+                if(str[i+1]>'9' || str[i+1]<'0')
+                {
+                    if(flag)
+                        return sum;
+                    else
+                        return sum*-1;
+                }
+            }
+            else if(str[i]=='-')
+            {
+                flag=0;
+                if(str[i+1]<'0' || str[i+1]>'9')
+                    return 0;
+            }
+            else if(str[i]=='+')
+            {
+                flag=1;
+                if(str[i+1]<'0' || str[i+1]>'9')
+                    return 0;
+            }
+            else
+            {
+                if(sum!=0)
+                    break;
+                else
+                    return 0;
+            }
+        }
+        if(sum < INT_MIN)
+        {
+             if(flag)
+                return INT_MAX;
+            else
+                return -INT_MIN;
+        }
+        if(sum > INT_MAX)
+        {
+            if(flag)
+                return INT_MAX;
+            else
+                return -INT_MIN;
+        }
+        if(flag)
+            return (int)sum;
+        else
+            return (int)sum*-1;
+        return sum;
+    }
+};
+
+#dalao 8ms大佬
+class Solution {
+public:
+    int myAtoi(string str) {
+    int index = 0;
+	int res = 0;
+	int sign = 0;
+	int num_add = '+' - '0';
+	int num_sub = '-' - '0';
+	int num_space = ' ' - '0';
+	while (index < str.length())
+	{
+		int c = str.at(index) - '0';
+			
+		if (0 == sign)
+		{
+			if (num_space == c)
+			{
+			}
+			else if (c >= 0&&c <= 9)
+			{
+				sign = 1;
+				res = res * 10 + c;
+			}
+			else if (c == num_add)
+			{
+				sign = 1;
+			}
+			else if (c == num_sub)
+			{
+				sign = -1;
+			}
+			else
+			{
+				break;
+			}
+		}
+		else
+		{
+			if (c >= 0 && c <= 9)
+			{
+				int t = sign > 0 ? 7 : 8;
+				if (res > INT_MAX / 10 || (res == INT_MAX / 10 && c > t))
+					return sign > 0 ? INT_MAX : INT_MIN;
+				res = res * 10 + c;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		index++;
+	}
+
+	return res*sign;
+    }
+};
+
+24.实现strstr
+#me 解 16ms
+class Solution {
+public:
+    int strStr(string haystack, string needle) 
+    {
+        int i,k,j=0;
+        if(needle.size()==0)
+            return 0;
+        if(haystack.size()<needle.size())
+            return -1;
+        for(i=0;i<haystack.size();i++)
+        {
+            if(haystack[i]==needle[j])
+            {
+                k=i;
+                j++;
+                if(j==needle.size())
+                    return k-j+1;
+            }
+            else
+            {
+                i-=j;
+                j=0;
+            }
+        }
+        if(j==needle.size())
+            return k-j+1;
+        else
+            return -1;
+    }
+};
+
+#大佬 4ms
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        int nSizeH = haystack.size();
+        int nSizeN = needle.size();
+        if(!nSizeN) return 0;
+        if(nSizeH<nSizeN) return -1;
+        for(int i=0; i<nSizeH, nSizeH-i>=nSizeN; i++)
+        {
+            if(haystack[i]==needle[0])
+            {
+                int j=1;
+                for(1; j<nSizeN; j++)
+                {
+                    if(haystack[i+j] != needle[j])
+                        break;
+                }
+                if(j>=nSizeN) return i;
+            }
+        }
+        return -1;
+    }
+};
+
+25.报数
+#12ms
+class Solution {
+public:
+    string countAndSay(int n)
+    {
+        if(n == 1)
+        {
+			return "1";
+		}
+		string pre = countAndSay(n - 1);
+	    string s="";
+		for(int k=0; k<pre.size();)
+        {
+			int index = 1;
+			for (int i=k;i<pre.size()-1;i++) 
+            {
+				if(pre[i] == pre[i+1]) 
+					index++;
+                else 
+					break;
+			}
+			s.append(to_string(index));
+			s+=pre[k];
+			k+=index;
+		}
+ 
+		return s;
+    }
+};
+
+
+#4ms
+class Solution {
+public:
+    string nextis(string s)
+    {
+        string ret="";
+        int len = s.length();
+        for(int i=0;i<len;i++)
+        {
+            int sum=1;
+            int j=i;
+            while(j+1 < len && s.at(j)==s.at(j+1))
+            {
+                sum++;
+                j++;
+            }
+            ret += std::to_string(sum) + s.at(i);
+            //printf("===%s\n",ret.c_str());
+            if(1)
+            {
+                s=s.substr(sum,len-sum);
+                //rintf("co%s\n",s.c_str());
+                len=s.length();
+                i=-1;
+            }
+            
+        }
+        //printf("dangqian=%s\n",ret.c_str());
+        return ret;
+    }
+    string countAndSay(int n) {
+        string result="";
+        if(n<1 || n>30)
+            return result;
+        result="1";
+        for(int i=1;i<n;i++)
+        {
+            result=nextis(result);
+        }
+        return result;
+    }
+};
+
+
+
+
+26.最长公共前缀
+#16ms
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) 
+    {
+         if(strs.empty()) 
+             return "";
+         for(int i=0;i<strs[0].size();i++)
+         {
+            for(int j=1;j<strs.size();j++)
+            {
+                if(strs[j][i]!=strs[0][i]) 
+                    return strs[0].substr(0,i);
+            }
+        }
+        return strs[0];
+    }
+};
+
+
+
+
+

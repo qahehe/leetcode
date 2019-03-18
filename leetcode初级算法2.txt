@@ -1,0 +1,959 @@
+链表
+
+1.删除链表中的结点
+#40ms /8ms
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void deleteNode(ListNode* node) 
+    {
+        node->val=node->next->val;
+        node->next=node->next->next;
+    }
+};
+
+2.删除链表的倒数第N个节点
+#时间多 16ms
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) 
+    {
+        ListNode *s=new ListNode(0);
+        s->next=head;
+        int len=0;
+        ListNode* p=head;
+        while(p)
+        {
+            len++;
+            p=p->next;
+        }
+        len-=n;
+        p=s;
+        while(len>0)
+        {
+            len--;
+            p=p->next;
+        }
+        p->next=p->next->next;
+        return s->next;
+    }
+};
+
+#大佬
+执行用时为 4 ms 的范例
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) 
+	{
+        ListNode* h = new ListNode(0);
+        h->next = head;
+        ListNode* p = head;
+        ListNode* q = h;
+        while(n--){
+            p = p->next;
+        }
+        while(p){
+            p = p->next;
+            q = q->next;
+        }
+        q->next = q->next->next;
+        return h->next;
+    }
+};
+
+
+3.反转链表
+#me 16ms
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) 
+    {
+        vector<int> s;
+        ListNode* q=head;
+        while(q)
+        {
+            s.push_back(q->val);
+            q=q->next;
+        }
+        q=head;
+        int t=s.size();
+        while(q)
+        {
+            q->val=s[t-1];
+            t--;
+            q=q->next;
+        }
+        q=head;
+        return q;
+    }
+};
+
+执行用时为 4 ms 的范例
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(head==NULL||head->next==NULL){
+            return head;
+        }
+      ListNode *pre=head;
+      ListNode *cur=head->next;
+      head->next=NULL;
+        ListNode*next=cur->next;
+        while(cur){
+           next=cur->next;
+            cur->next=pre;
+            pre=cur;
+            cur=next;
+        }
+        return pre;
+    }
+};
+
+
+
+4.合并两个有序链表
+#me 32ms
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) 
+    {
+        ListNode* s=new ListNode(0);
+        ListNode *head=new ListNode(0);
+        head->next=s;
+        while(l1 && l2)
+        {
+            if(l1->val>=l2->val)
+            {
+                ListNode *t=new ListNode(0);
+                t->val=l2->val;
+                l2=l2->next;
+                s->next=t;
+                s=t;
+            }
+            else
+            {
+                ListNode *t=new ListNode(0);
+                t->val=l1->val;
+                l1=l1->next;
+                s->next=t;
+                s=t;
+            }    
+        }
+        while(l1)
+        {
+            ListNode *t=new ListNode(0);
+            t->val=l1->val;
+            s->next=t;
+            s=t;
+            l1=l1->next;
+        }
+        while(l2)
+        {
+            ListNode *t=new ListNode(0);
+            t->val=l2->val;
+            s->next=t;
+            s=t;
+            l2=l2->next;
+        }
+        head=head->next->next;
+        return head;
+    }
+};
+
+#8ms
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode *res = new ListNode(-1), *cur = res;
+        while(l1 && l2) {
+            if(l1->val <= l2->val) {
+                cur->next = l1;
+                cur = cur->next;
+                l1 = l1->next;
+            }
+            else {
+                cur->next = l2;
+                cur = cur->next;
+                l2 = l2->next;
+            }
+        }
+        if(l1) {
+            cur->next = l1;
+        }
+        if(l2) {
+            cur->next = l2;
+        }
+        return res->next;
+    }
+};
+
+
+
+5.回文链表 
+#me jie  36ms
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) 
+    {
+        ListNode *s=head;
+        vector<int> q;
+        while(s)
+        {
+            q.push_back(s->val);
+            s=s->next;
+        }
+        for(int i=0,j=q.size()-1;i<q.size()/2;j--,i++)
+        {
+            if(q[i]!=q[j])
+                return false;
+        }
+        return true;
+    }
+};
+
+#16ms
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        if(!head || !head -> next)
+            return true;
+        ListNode *slow = head, *fast = head;
+        stack<int> s;
+        s.push(head -> val);;
+        while(fast -> next && fast -> next -> next){
+            slow = slow -> next;
+            fast = fast -> next -> next;
+            s.push(slow -> val);
+        }
+        if(!fast -> next)
+            s.pop();
+        while(slow -> next){
+            slow = slow -> next;
+            int temp = s.top();
+            s.pop();
+            if(temp != slow -> val)
+                return false;
+        }
+        return true;
+    }
+};
+
+
+
+
+6.环形链表
+思路：
+设置两个指针，fast和slow，fast每次走两步，slow每次走一步，想象一下，如果链表有环是封闭的话，
+两个指针在里面就形成了一个追击问题，是早晚会相遇的，我们就依据这一思路来做题。
+class Solution {
+public:
+    bool hasCycle(ListNode *head) 
+    {
+        ListNode * fast=new ListNode(0);
+        ListNode * slow=new ListNode(0);
+        if(!head|| !head -> next)
+            return false;
+        else
+        {
+            fast = head -> next;
+            slow = head;
+            while(fast)
+            {
+                if(fast == slow)
+                    return true;
+                else
+                {
+                    fast = fast -> next;
+                    if(!fast)
+                        return false;
+                    else
+                    {
+                        fast = fast -> next;
+                        slow = slow -> next;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+};
+
+#8ms
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode* fast=head,*slow=head;
+        while(fast && slow){
+            fast=fast->next;
+            if(!fast) return false;
+            fast=fast->next;
+            slow=slow->next;
+            if(fast==slow) return true;
+        }
+        return false;
+    }
+};
+
+
+
+7.二叉树的最大深度
+#mejie 36ms
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int count;
+    int maxDepth(TreeNode* root) 
+    {
+        return get_height(root);
+    }
+    int get_height(TreeNode *t)
+	{
+	    int h1;
+        int h2;
+	    if(!t)
+	       return 0;
+	    else
+		{
+		    h1=get_height(t->left);
+	        h2=get_height(t->right);
+	        return (h1>=h2)?(1+h1):(1+h2);
+	    }
+	}
+};
+
+#4ms
+class Solution
+{
+  public:
+    int max(const int a, const int b)
+    {
+        return (a > b ? a : b);
+    }
+    int maxDepth(TreeNode *root)
+    {
+        if (root == NULL)
+            return 0;
+        int leftMaxLen = maxDepth(root->left);
+        int rightMaxLen = maxDepth(root->right);
+        return max(leftMaxLen, rightMaxLen) + 1;
+    }
+};
+
+
+
+8.验证二叉搜索树
+#44MS
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) 
+    {
+        return isValidBST(root, LONG_MIN, LONG_MAX);
+    }
+    bool isValidBST(TreeNode* root,long m,long n) 
+    {
+        if (!root) return true;
+        if (root->val <=m || root->val>=n) 
+            return false;
+        return isValidBST(root->left, m, root->val) && isValidBST(root->right, root->val, n);
+    }
+};
+
+#8ms
+class Solution {
+public:
+    TreeNode* pre;
+    bool isValidBST(TreeNode* root) {
+        pre=NULL;
+        return dfs(root);
+    }
+    
+    bool dfs(TreeNode* root){
+        if(!root) return true;
+        if(!dfs(root->left)) return false;
+        if(pre && pre->val>=root->val) return false;
+        pre=root;
+        if(!dfs(root->right)) return false;
+        return true;
+    }
+};
+9.对称二叉树
+#20ms 递归
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) 
+    {
+        if(!root)
+            return true;
+        return isSy(root->left,root->right);
+    }
+    bool isSy(TreeNode * p,TreeNode*q)
+    {
+        if(!p && !q)
+            return true;
+        else if(!p || !q)
+            return false;
+        else
+            return (p->val==q->val)&&isSy(p->right,q->left)&& isSy(p->left,q->right);
+    }
+};
+
+#迭代 24ms
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) 
+    {
+        if(!root)
+            return true;
+        stack<TreeNode*> s;
+        TreeNode*p=root->left;
+        TreeNode*q=root->right;
+        s.push(p);
+        s.push(q);
+        while(!s.empty())
+        {
+            p=s.top();
+            s.pop();
+            q=s.top();
+            s.pop();
+            if(!p && !q)
+                continue;
+            else if(!p || !q)
+                return false;
+            else if(p->val!= q->val)
+                return false;
+            s.push(p->left);
+            s.push(q->right);
+            s.push(p->right);
+            s.push(q->left);
+        }
+        return true;
+    }
+};
+
+10.二叉树的层次遍历
+#112ms
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) 
+    {
+        vector<vector<int>> s;
+        if(!root)
+            return s;
+        queue<TreeNode*> q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            vector<int> p;
+            while(size--)
+            {
+                TreeNode *d=q.front();
+                q.pop();
+                p.push_back(d->val);
+                if(d->left)
+                    q.push(d->left);
+                if(d->right)
+                    q.push(d->right);
+            }
+            s.push_back(p);
+        }
+        //reverse(s.begin(),s.end());
+        return s;
+    }
+};
+
+#4ms
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        TreeNode* right=root,*nextright=NULL;
+        queue<TreeNode*> Q;
+        if(root) Q.push(root);
+        vector<vector<int>> vv;
+        vv.push_back(vector<int>());
+        while(!Q.empty()){
+            TreeNode* cur=Q.front();Q.pop();
+            vv.back().push_back(cur->val);
+            if(cur->left){Q.push(cur->left);nextright=cur->left;}
+            if(cur->right){Q.push(cur->right);nextright=cur->right;}
+            if(cur == right){
+                right=nextright;
+                vv.push_back(vector<int>());
+            }
+        }
+        while(!vv.empty() && vv.back().empty()) vv.pop_back();
+        return vv;
+    }
+};
+
+
+11.将有序数组转换为二叉搜索树
+#72ms
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) 
+    {
+        if(nums.empty()) return NULL;
+        TreeNode* root=new TreeNode(nums[nums.size()/2]);
+        vector<int> l=vector<int>(nums.begin(),nums.begin()+nums.size()/2);
+        vector<int> r=vector<int>(nums.begin()+nums.size()/2+1,nums.end());
+        root->left=sortedArrayToBST(l);
+        root->right=sortedArrayToBST(r);
+        return root;
+    }
+};
+
+#8ms
+class Solution {
+public:
+    
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        int len=nums.size();
+        //int mid=len/2;
+        if(nums.size()==0)return NULL;
+        return Sort(nums,0,len-1);
+    }
+    private:
+    TreeNode * Sort(vector<int>&nums,int begin,int end){
+        if(begin>end)return NULL;
+        if(begin==end)return new TreeNode(nums[begin]);
+        int mid=(end-begin)/2+begin;
+        TreeNode * root=new TreeNode(nums[mid]);
+        root->left=Sort(nums,begin,mid-1);
+        root->right=Sort(nums,mid+1,end);
+        return root;
+    }
+};
+
+
+12.合并两个有序数组
+#16ms
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) 
+    {
+        int i=m,j=0;
+        while(j<n)
+        {
+            nums1[i]=nums2[j];
+            i++;
+            j++;
+        }
+        sort(nums1.begin(),nums1.end());
+        return ;
+    }
+}; 
+
+#8ms
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int i=m-1,j=n-1,k=m+n-1;
+        while(i>=0 || j>=0){
+            if(j<0|| i>=0 && nums1[i]>=nums2[j]) nums1[k--]=nums1[i--];
+            else nums1[k--]=nums2[j--];
+        }
+    }
+};
+
+13.第一个错误版本
+#8ms 二分查找
+class Solution {
+public:
+    int firstBadVersion(int n) 
+    {
+        int low =0;
+        int high=n;
+        int mid=0;
+        while(low+1<high)
+        {
+            mid=(low+1)/2+high/2;
+            if(isBadVersion(mid))
+                high=mid;
+            else
+                low=mid;
+        }
+        return high;
+    }
+};
+
+
+#动态规划
+
+14.爬楼梯
+#超时递归
+class Solution {
+public:
+    int climbStairs(int n) 
+    {
+        if(n==1)
+            return 1;
+        if(n==2)
+            return 2;
+        return climbStairs(n-1)+climbStairs(n-2);
+    }
+};
+
+#迭代 8ms
+class Solution {
+public:
+    int climbStairs(int n) 
+    {
+        if(n==1)
+            return 1;
+        if(n==2)
+            return 2;
+        int i=1,j=2;
+        int s=i+j;
+        if(n>=3)
+        {
+            int k=3;
+            while(k<=n)
+            {
+                s=i+j;
+                i=j;
+                j=s;
+                k++;
+            }
+        }
+        return s;
+    }
+};
+#dalao 标准解法 0ms
+class Solution {
+public:
+    int climbStairs(int n) {
+        
+        int *sum = new int [n + 1];
+        
+        sum[0] = 0;
+        sum[1] = 1;
+        sum[2] = 2;
+        
+        for(int i = 3; i <= n; i++)
+            sum[i] = sum[i - 1] + sum[i - 2];
+        
+        return sum[n];
+        
+    }
+};
+
+
+
+15.买卖股票的最佳时机
+#沙雕解法 1162ms
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) 
+    {
+        if(prices.empty() ||  prices.size()==1)
+            return 0;
+        int count=prices[1]-prices[0];
+        for(int i=0;i<prices.size()-1;i++)
+        {
+            for(int j=i+1;j<prices.size();j++)
+            {
+                if(prices[i]<prices[j] && count<=(prices[j]-prices[i]))
+                    count=prices[j]-prices[i];
+            }
+        }
+        if(count<0)
+            return 0;
+        return count;
+    }
+};
+
+#4ms
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int min_price = INT_MAX, max_profit = 0;
+        for (auto it = prices.begin(); it != prices.end(); it++) {
+            if (*it < min_price) min_price = *it;
+            max_profit = max(max_profit, *it - min_price);
+        }
+        return max_profit;
+    }
+};
+
+
+
+
+16.最大子序和
+#24ms 动态规划
+求和，然后判断和是否小于0，因为只要前面的和小于0，
+那么后面的数加上前面的和就一定比自身小，
+所以又重新求和，并和之前的最大子序和比较，取最大值。
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) 
+    {
+        int ans=0;
+        int m=INT_MIN;
+        int l=nums.size();
+        for(int i=0;i<l;i++)
+        {
+            if(ans<0)
+                ans=0;
+            ans+=nums[i];
+            m=max(m,ans);
+        }
+        return m;
+    }
+};
+
+#分治
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {  
+        return divide(nums, 0, nums.size()-1);
+    }  
+    
+    int divide(vector<int>& nums, int l, int r) {
+        if(l == r)  return nums[l];
+        if(l == r-1) return max(nums[l], max(nums[r], nums[l]+nums[r]));
+        
+        int mid = (l+r)>>1;
+        int lret = divide(nums, l, mid-1);
+        int rret = divide(nums, mid+1, r);
+        
+        int mret = nums[mid];
+        int sum = mret;
+        for(int i = mid-1; i >= l ; i --) {
+            sum += nums[i];
+        //    if(sum < 0) sum = 0;
+            mret = max(mret, sum);
+        }
+        sum = mret;    //保存已经计算过的左边的最大子序和
+        for(int i = mid+1; i <= r ; i ++) {
+            sum += nums[i];
+        //    if(sum < 0) sum = 0;
+            mret = max(mret, sum);
+        }
+        
+        return max(lret, max(rret, mret));
+    }
+};
+
+
+
+17.打家劫舍
+#dp 24ms
+class Solution {
+public:
+    int rob(vector<int>& nums)
+    {
+        if(nums.size()<=1)
+            return nums.size()==0?0:nums[0];
+        int a=nums[0];
+        int b=max(nums[1],nums[0]);
+        for(int i=2;i<nums.size();i++)
+        {
+            int t=b;
+            b=max(b,a+nums[i]);
+            a=t;
+        }
+        return b;
+    }
+};
+
+#dalao 0ms
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.size()==0)return 0;
+        int dp[nums.size()+1];
+        dp[0]=0;
+        dp[1]=max(dp[0], nums[0]);
+        for(int i=2;i<=nums.size();++i){
+            dp[i]=max(dp[i-1], dp[i-2]+nums[i-1]);
+        }
+        return dp[nums.size()];
+    }
+};
+
+
+#其他
+18.有效的括号
+#12ms
+
+class Solution {
+public:
+    bool isValid(string s) 
+    {
+        if(s.size()==0)
+            return true;
+        if(s.size()==1)
+            return false;
+        if(s[0]==')' || s[0]==']' || s[0]=='}')
+            return false;
+        stack<char> q;
+        for(int i=0;i<s.size();i++) 
+        {
+            if(s[i]=='(')
+                q.push(s[i]);
+            else if(s[i]=='[')
+                q.push(s[i]);
+            else if(s[i]=='{')
+                q.push(s[i]);
+            if(s[i]==')')
+            {
+                if(q.empty())
+                    return false;
+                if(q.top()!='(')
+                    return false;
+                else 
+                    q.pop();
+            }
+            else if(s[i]==']')
+            {
+                if(q.empty())
+                    return false;
+                if(q.top()!='[')
+                    return false;
+                else 
+                    q.pop();
+            }
+            else if(s[i]=='}')
+            {
+                if(q.empty())
+                    return false;
+                if(q.top()!='{')
+                    return false;
+                else 
+                    q.pop();
+            }
+        }
+        if(!q.empty())
+            return false;
+        return true;
+    }
+};
+
+#0ms
+class Solution {
+public:
+    bool isValid(string s) {
+        if(s.empty()) return true;
+        stack<char> paren;
+        for(int i = 0; i < s.size(); i++) {
+            switch(s[i]) {
+                case '(':
+                case '[':
+                case '{': paren.push(s[i]); break;
+                case ')': {
+                    if(paren.empty() || paren.top() != '(') return false;
+                    paren.pop();
+                    break;
+                }
+                case ']': {
+                    if(paren.empty() || paren.top() != '[') return false;
+                    paren.pop();
+                    break;
+                }
+                case '}': {
+                    if(paren.empty() || paren.top() != '{') return false;
+                    paren.pop();
+                    break;
+                }
+                default: break;
+            }
+        }
+        if(!paren.empty()) return false;
+        return true;
+    }
+};
+
+19.缺失数
+#me 76ms
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) 
+    {
+        sort(nums.begin(),nums.end());
+        int i;
+        for(i=0;i<nums.size();i++)
+        {
+            if(nums[i]!=i)
+                return i;
+        }
+        return i;
+    }
+};
+
+
+#8ms
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) 
+    {
+        int *p=new int[nums.size()+1];
+		int i;
+		for(i=0;i<nums.size();i++)
+			p[i] =0;
+		for(i=0;i<nums.size();i++)
+			p[nums[i]]++;
+		for(i=0;i<nums.size();i++)
+		{
+			if(p[nums[i]==0)
+				return i;
+		}
+		return i;
+	}
+};
